@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "advent-of-code-2022"
+version = "0.1.0"
+description = "sandbox for Advent of Code 2022"
+authors = ["Bart Van Loon <bbb@bbbart.be>"]
+readme = "README.md"
+packages = [{include = "advent_of_code"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+sympy = "^1.11.1"
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^2.15.7"
+ropevim = "^0.8.1"
+bpython = "^0.23"
+pudb = "^2022.1.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+merge-issues = true
+workers = 4
+ignore-missing-extends = false
+
+[tool.pylint.messages_control]
+max-line-length = 79
+disable = "C0301, C0114, C0115, C0116, C0103"  # no docstrings
+
+[tool.pydocstyle]
+ignore = "D100, D101, D102, D103, D105, D107"  # no docstrings
