@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "advent-of-code-2022"
+name = "advent-of-code"
 version = "0.1.0"
-description = "sandbox for Advent of Code 2022"
+description = "sandbox for Advent of Code"
 authors = ["Bart Van Loon <bbb@bbbart.be>"]
 readme = "README.md"
 packages = [{include = "advent_of_code"}]
