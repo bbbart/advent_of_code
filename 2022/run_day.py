@@ -23,7 +23,7 @@ data_samp_fp = data_path / "input_sample"
 data_real_fp = data_path / "input"
 
 results = {}
-print("RUNNING")
+print("RUNNING:")
 for dataset in ("samp", "real"):
     data_fp = locals()[f"data_{dataset}_fp"]
     if data_fp.exists():

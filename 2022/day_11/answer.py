@@ -94,7 +94,6 @@ def p2(data):
             for turn in monkey.take_turn(mod):
                 item, goes_to = turn
                 monkeys[goes_to].items.append(item)
-        inspection_counts = [monkey.inspection_count for monkey in monkeys]
 
     inspection_counts = sorted(monkey.inspection_count for monkey in monkeys)
     return inspection_counts[-1] * inspection_counts[-2]
