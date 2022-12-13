@@ -1,4 +1,5 @@
 from collections import defaultdict
+from copy import deepcopy
 from dataclasses import dataclass
 from string import ascii_lowercase
 from warnings import warn
@@ -71,8 +72,8 @@ def build_graph(data):
 
 
 def find_shortest_path(start, goal, graph):
-    # simple breadth-first search, no recursion (would have been faster, with
-    # memoization)
+    # simple breadth-first search (recursion with memoization would have been
+    # faster)
     explored = []
     queue = [[start]]
 
@@ -87,7 +88,7 @@ def find_shortest_path(start, goal, graph):
             continue
 
         for neighbour in graph[node]:
-            new_path = list(path)
+            new_path = deepcopy(path)
             new_path.append(neighbour)
             queue.append(new_path)
 
@@ -115,4 +116,4 @@ def p2(data):
             if path:
                 scenic_paths.append(path)
 
-    return min(len(path) - 1 for path in scenic_paths)
+    return min(len(path) for path in scenic_paths) - 1
