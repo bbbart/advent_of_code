@@ -12,7 +12,7 @@ class Packet:
             right_type = type(right)
 
             # both are ints
-            if left_type == int and right_type == int:
+            if left_type == right_type == int:
                 if left == right:
                     continue
                 return left < right
