@@ -1,6 +1,6 @@
 from collections import namedtuple
 from enum import Enum
-from itertools import chain
+from itertools import chain, pairwise
 from warnings import warn
 
 Coordinate = namedtuple("Coordinate", ("x", "y"))
@@ -27,6 +27,14 @@ class Cave:
         for line in self._cave:
             cave_as_str += ("".join(map(str, line))) + "\n"
         return cave_as_str
+
+    @property
+    def width(self):
+        return len(self._cave[0])
+
+    @property
+    def height(self):
+        return len(self._cave)
 
     @property
     def sand_source_co(self):
@@ -81,14 +89,6 @@ class CaveWithFloor(Cave):
         # set the floor
         self._cave.append([Space.AIR for _ in range(self.width)])
         self._cave.append([Space.ROCK for _ in range(self.width)])
-
-    @property
-    def width(self):
-        return len(self._cave[0])
-
-    @property
-    def height(self):
-        return len(self._cave)
 
     def get_at_co(self, co: Coordinate):
         if co.y == self.height - 1:
@@ -149,9 +149,7 @@ def create_cave(data, caveclass=Cave):
 
     # set rock paths
     for path in paths:
-        for index in range(len(path) - 1):
-            co_from = path[index]
-            co_to = path[index + 1]
+        for co_from, co_to in pairwise(path):
             if co_from.x == co_to.x:
                 for y in range(
                     min(co_from.y, co_to.y), max(co_from.y, co_to.y) + 1
@@ -186,7 +184,6 @@ def p2(data):
         count += 1
         if cave.get_at_co(cave.sand_source_co) == Space.SAND:
             break
-        assert cave.get_at_co(cave.sand_source_co) == Space.SOURCE
 
     if cave.get_at_co(cave.sand_source_co) != Space.SAND:
         warn("Sand dropping simulation stopped before blocking the source!")
