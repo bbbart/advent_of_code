@@ -84,7 +84,7 @@ def print_scene(pos_knots):
     print()
 
 
-def p1(data):
+def p1(data, is_sample):
     pos_h = Coordinate(1000, 1000)
     pos_t = Coordinate(1000, 1000)
     pos_t_history = set()
@@ -102,7 +102,7 @@ def p1(data):
     return len(pos_t_history)
 
 
-def p2(data):
+def p2(data, is_sample):
     pos_knots = [Coordinate(1000, 1000) for _ in range(10)]
     pos_t_history = set()
 

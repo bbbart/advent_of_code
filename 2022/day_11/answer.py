@@ -72,7 +72,7 @@ def create_monkeys(data):
     return monkeys
 
 
-def p1(data):
+def p1(data, is_sample):
     monkeys = create_monkeys(data)
 
     for _ in range(20):
@@ -85,7 +85,7 @@ def p1(data):
     return inspection_counts[-1] * inspection_counts[-2]
 
 
-def p2(data):
+def p2(data, is_sample):
     monkeys = create_monkeys(data)
     mod = reduce(lambda x, y: x * y, (monkey.div_test for monkey in monkeys))
 

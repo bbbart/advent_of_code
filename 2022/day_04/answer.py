@@ -11,7 +11,7 @@ def parse_data(data):
         yield space1, space2
 
 
-def p1(data):
+def p1(data, is_sample):
     containscounter = 0
     for space1, space2 in parse_data(data):
         if space1.issubset(space2) or space2.issubset(space1):
@@ -20,7 +20,7 @@ def p1(data):
     return containscounter
 
 
-def p2(data):
+def p2(data, is_sample):
     overlapcounter = 0
     for space1, space2 in parse_data(data):
         if space1.intersection(space2):

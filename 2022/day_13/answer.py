@@ -33,7 +33,7 @@ class Packet:
 
 # pylint: disable=eval-used
 # It's actually pretty useful here, given we check the input :-)
-def p1(data):
+def p1(data, is_sample):
     packet_pairs = []
     packet_left, packet_right = None, None
     for line in data:
@@ -56,7 +56,7 @@ def p1(data):
 
 # pylint: disable=eval-used
 # It's actually pretty useful here, given we check the input :-)
-def p2(data):
+def p2(data, is_sample):
     divider_2 = Packet([[2]])
     divider_6 = Packet([[6]])
     packets = [divider_2, divider_6]

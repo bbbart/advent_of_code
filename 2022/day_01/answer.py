@@ -14,11 +14,11 @@ def parse_input(data):
     return cals_per_elf
 
 
-def p1(data):
+def p1(data, is_sample):
     cals_per_elf = parse_input(data)
     return max(cals_per_elf.values())
 
 
-def p2(data):
+def p2(data, is_sample):
     cals_per_elf = parse_input(data)
     return sum(sorted(cals_per_elf.values())[-3:])

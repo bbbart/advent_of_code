@@ -22,7 +22,7 @@ def parse_input(data):
     return stacks
 
 
-def p1(data):
+def p1(data, is_sample):
     stacks_p1 = parse_input(data)
     for line in data:
         if not line.startswith("move"):
@@ -42,7 +42,7 @@ def p1(data):
     return result
 
 
-def p2(data):
+def p2(data, is_sample):
     stacks_p2 = parse_input(data)
 
     for line in data:

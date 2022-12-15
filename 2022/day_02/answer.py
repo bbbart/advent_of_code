@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-def p1(data):
+def p1(data, is_sample):
     score_pick = {"X": 1, "Y": 2, "Z": 3}
     score_game = {"win": 6, "draw": 3, "loss": 0}
     total_score = 0
@@ -37,7 +37,7 @@ def p1(data):
     return total_score
 
 
-def p2(data):
+def p2(data, is_sample):
     score_pick = {"A": 1, "B": 2, "C": 3}
     score_game = {"X": 0, "Y": 3, "Z": 6}
     total_score = 0

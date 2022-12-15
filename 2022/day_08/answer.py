@@ -70,7 +70,7 @@ def scenic_score(x, y, forest):
     )
 
 
-def p1(data):
+def p1(data, is_sample):
     forest = []
     for line in data:
         forest.append(list(line))
@@ -83,7 +83,7 @@ def p1(data):
     )
 
 
-def p2(data):
+def p2(data, is_sample):
     forest = []
     for line in data:
         forest.append(list(line))

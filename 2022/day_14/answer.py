@@ -166,7 +166,7 @@ def create_cave(data, caveclass=Cave):
     return cave
 
 
-def p1(data):
+def p1(data, is_sample):
     cave = create_cave(data)
 
     count = 0
@@ -176,7 +176,7 @@ def p1(data):
     return count
 
 
-def p2(data):
+def p2(data, is_sample):
     cave = create_cave(data, CaveWithFloor)
 
     count = 0

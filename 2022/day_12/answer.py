@@ -101,13 +101,13 @@ def find_shortest_path(start, goal, graph):
     return None
 
 
-def p1(data):
+def p1(data, is_sample):
     start, goal, graph = build_graph(data)
     path = find_shortest_path(start, goal, graph)
     return len(path) - 1
 
 
-def p2(data):
+def p2(data, is_sample):
     _, goal, graph = build_graph(data)
     scenic_paths = []
     for start in graph.keys():

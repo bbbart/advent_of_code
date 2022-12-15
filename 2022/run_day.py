@@ -33,7 +33,7 @@ for dataset in ("samp", "real"):
             with contextlib.suppress(AttributeError):
                 print(results_key)
                 results[results_key] = getattr(answer_code, f"p{part}")(
-                    deepcopy(data)
+                    deepcopy(data), is_sample=dataset == 'samp'
                 )
 
 print()

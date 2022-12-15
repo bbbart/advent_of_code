@@ -71,7 +71,7 @@ def parse_data(data):
     return dirsizes
 
 
-def p1(data):
+def p1(data, is_sample):
     dirsizes = parse_data(data)
 
     answer = 0
@@ -82,7 +82,7 @@ def p1(data):
     return answer
 
 
-def p2(data):
+def p2(data, is_sample):
     dirsizes = parse_data(data)
 
     total_space = 70000000

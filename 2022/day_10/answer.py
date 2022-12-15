@@ -15,7 +15,7 @@ def draw_pixel(crt_pos, reg_x):
         print(".", end="")
 
 
-def p1(data):
+def p1(data, is_sample):
     cycle = 0
     reg_x = 1
 
@@ -34,7 +34,7 @@ def p1(data):
     return sum(map(lambda val: val[0] * val[1], checked_values))
 
 
-def p2(data):
+def p2(data, is_sample):
     cycle = 0
     reg_x = 1
     crt_pos = 0

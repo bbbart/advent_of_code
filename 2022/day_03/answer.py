@@ -9,7 +9,7 @@ def get_priority(letter):
     return priority_order.index(letter) + 1
 
 
-def p1(data):
+def p1(data, is_sample):
     total_priority = 0
     for rucksack in data:
         comp1 = set(rucksack[0 : len(rucksack) // 2])
@@ -20,7 +20,7 @@ def p1(data):
     return total_priority
 
 
-def p2(data):
+def p2(data, is_sample):
     total_badge_priority = 0
     for group in zip(*[iter(data)] * 3):
         rucksack1 = set(group[0])

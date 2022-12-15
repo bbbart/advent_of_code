@@ -6,7 +6,7 @@ def find_marker(line, blocklen):
     return 0
 
 
-def p1(data):
+def p1(data, is_sample):
     blocklen = 4
     markers = []
     for line in data:
@@ -14,7 +14,7 @@ def p1(data):
     return ", ".join(map(str, markers))
 
 
-def p2(data):
+def p2(data, is_sample):
     blocklen = 14
     markers = []
     for line in data:
