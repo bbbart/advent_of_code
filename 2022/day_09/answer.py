@@ -8,15 +8,14 @@ class Coordinate:
     y: int
 
     def move(self, direction: str):
-        match direction:
-            case "R":
-                self.x += 1
-            case "L":
-                self.x -= 1
-            case "U":
-                self.y += 1
-            case "D":
-                self.y -= 1
+        if direction == 'R':
+            self.x += 1
+        elif direction == "L":
+            self.x -= 1
+        elif direction == "U":
+            self.y += 1
+        elif direction == "D":
+            self.y -= 1
 
         if self.x < 0 or self.y < 0:
             warn("negative coordinates")

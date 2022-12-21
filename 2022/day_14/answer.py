@@ -1,6 +1,6 @@
 from collections import namedtuple
 from enum import Enum
-from itertools import chain, pairwise
+from itertools import chain
 from warnings import warn
 
 Coordinate = namedtuple("Coordinate", ("x", "y"))
@@ -149,7 +149,7 @@ def create_cave(data, caveclass=Cave):
 
     # set rock paths
     for path in paths:
-        for co_from, co_to in pairwise(path):
+        for co_from, co_to in zip(path, path[1:]):
             if co_from.x == co_to.x:
                 for y in range(
                     min(co_from.y, co_to.y), max(co_from.y, co_to.y) + 1

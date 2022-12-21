@@ -45,7 +45,7 @@ class Rock:
     @staticmethod
     def __analyze_shape(shape):
         lines = shape.split("\n")
-        width = max(len(line) for line in lines)
+        width = max((len(line) for line in lines))
         height = len(lines)
         matrix = []
         for line in lines:
@@ -108,40 +108,39 @@ class Chamber:
         return False
 
     def _move_falling_rock(self, direction="v"):
-        match direction:
-            case "v":
-                new_y = self._fallingrock_pos.y - 1
-                falling_coordinates = (
-                    self._fallingrock.get_filled_chamber_coordinates(
-                        Coordinate(self._fallingrock_pos.x, new_y)
-                    )
+        if direction == "v":
+            new_y = self._fallingrock_pos.y - 1
+            falling_coordinates = (
+                self._fallingrock.get_filled_chamber_coordinates(
+                    Coordinate(self._fallingrock_pos.x, new_y)
                 )
-                if new_y < 0 or self.__has_overlap(falling_coordinates):
-                    raise ReachedBottom
-                self._fallingrock_pos.y = new_y
-            case "<":
-                new_x = self._fallingrock_pos.x - 1
-                falling_coordinates = (
-                    self._fallingrock.get_filled_chamber_coordinates(
-                        Coordinate(new_x, self._fallingrock_pos.y)
-                    )
+            )
+            if new_y < 0 or self.__has_overlap(falling_coordinates):
+                raise ReachedBottom
+            self._fallingrock_pos.y = new_y
+        elif direction == "<":
+            new_x = self._fallingrock_pos.x - 1
+            falling_coordinates = (
+                self._fallingrock.get_filled_chamber_coordinates(
+                    Coordinate(new_x, self._fallingrock_pos.y)
                 )
-                if new_x >= 0 and not self.__has_overlap(falling_coordinates):
-                    self._fallingrock_pos.x = new_x
-            case ">":
-                new_x = self._fallingrock_pos.x + 1
-                falling_coordinates = (
-                    self._fallingrock.get_filled_chamber_coordinates(
-                        Coordinate(new_x, self._fallingrock_pos.y)
-                    )
+            )
+            if new_x >= 0 and not self.__has_overlap(falling_coordinates):
+                self._fallingrock_pos.x = new_x
+        elif direction == ">":
+            new_x = self._fallingrock_pos.x + 1
+            falling_coordinates = (
+                self._fallingrock.get_filled_chamber_coordinates(
+                    Coordinate(new_x, self._fallingrock_pos.y)
                 )
-                if (
-                    new_x + self._fallingrock.width <= self.width
-                    and not self.__has_overlap(falling_coordinates)
-                ):
-                    self._fallingrock_pos.x = new_x
-            case _:
-                warn(f"Unknown direction to move: {direction}")
+            )
+            if (
+                new_x + self._fallingrock.width <= self.width
+                and not self.__has_overlap(falling_coordinates)
+            ):
+                self._fallingrock_pos.x = new_x
+        else:
+            warn(f"Unknown direction to move: {direction}")
 
     def add_new_rock(self, rock: Rock):
         # get initial position of rock
