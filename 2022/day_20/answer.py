@@ -31,7 +31,6 @@ def p1(data, is_sample):
 
 
 def p2(data, is_sample):
-
     numbers_orig = list(map(Number, map(int, data)))
     numbers_mixed = deepcopy(numbers_orig)
 

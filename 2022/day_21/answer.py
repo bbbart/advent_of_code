@@ -6,12 +6,7 @@ def p1(data, is_sample):
     equalities = {}
     for line in data:
         left, right = line.split(": ")
-        try:
-            right = int(right)
-            equalities[left] = right
-        except ValueError:
-            right = sympify(right)
-            equalities[left] = right
+        equalities[left] = sympify(right)
 
     substitution = equalities["root"].subs(equalities)
     while True:
@@ -30,12 +25,7 @@ def p2(data, is_sample):
             continue
         if left == "humn":
             continue
-        try:
-            right = int(right)
-            equalities[left] = right
-        except ValueError:
-            right = sympify(right)
-            equalities[left] = right
+        equalities[left] = sympify(right)
 
     substitutions = {}
     for to_solve in to_equalize:

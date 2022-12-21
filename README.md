@@ -5,3 +5,8 @@ Check them out at https://adventofcode.com.
 It is not a beauty contest.
 I always strive for readable and efficient code and tend to write a lot of documentation.
 However, when it comes to solving puzzles, the relative importance of simply having a correct outcome increases significantly. :-)
+
+## Running the code
+* create the virtualenv and install the depedencies in ti (`poetry install`)
+* get into the year-directory
+* run `./run_day <number>``
