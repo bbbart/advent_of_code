@@ -257,7 +257,6 @@ def solve(
         except ExpeditionEscaped:
             #   2/ taking the next step leads us through the exit
             max_pathlen.append(len(path))
-            show_path(path)
             return len(path)
 
         #   3/ taking the next step brings us in a situation we were in before
