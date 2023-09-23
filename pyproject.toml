@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "advent_of_code"}]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 sympy = "^1.11.1"
 
 [tool.poetry.group.dev.dependencies]
@@ -22,7 +22,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 79
+line-length = 80
 merge-issues = true
 workers = 4
 ignore-missing-extends = false
