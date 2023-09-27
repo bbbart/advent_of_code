@@ -1,5 +1,5 @@
 from collections import defaultdict
-from queue import SimpleQueue
+from queue import SimpleQueue, Empty
 
 
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
@@ -74,7 +74,7 @@ def intcode(instructions, inputqueue: SimpleQueue):
         elif opcode == 3:  # INPUT
             try:
                 value = inputqueue.get_nowait()
-            except StopIteration:
+            except Empty:
                 print("no enough inputs")
                 return
             memory[params[0]] = value
