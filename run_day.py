@@ -39,12 +39,13 @@ for part in 1, 2:
             with contextlib.suppress(AttributeError):
                 print(results_key, end=' ')
                 try:
-                    results[results_key] = getattr(answer_code, f"p{part}")(
+                    result = getattr(answer_code, f"p{part}")(
                         deepcopy(data), is_sample=dataset == "samp"
                     )
-                    print("[\033[92mOK\033[0m]")
+                    results[results_key] = result
+                    print("[\033[92mOK\033[0m]", result)
                 except Exception as err:
-                    print("[\033[91mNOK\033[0m]")
+                    print("[\033[91mNOK\033[0m]", str(err))
                     raise err
 
 print()
