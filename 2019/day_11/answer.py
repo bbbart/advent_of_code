@@ -10,8 +10,8 @@ def intcode(instructions, inputqueue: SimpleQueue):
 
     # describes how the parameters work for the different opcodes:
     #   0: read parameter
-    #   1: write paremter (can never be in immesdiate mode)
-    param_types: dict[int, int] = {
+    #   1: write parameter (can never be in immediate mode)
+    param_types: dict[int, tuple[int]] = {
         1: (0, 0, 1),  # ADD
         2: (0, 0, 1),  # MULTIPLY
         3: (1,),  # INPUT
