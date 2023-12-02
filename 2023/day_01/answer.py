@@ -28,6 +28,7 @@ def p2(data, is_sample):
         "eight",
         "nine",
     )
+    re_numberword = re.compile("|".join(numberwords))
     for line in data:
         partial_word = ""
         for char in line:
@@ -35,7 +36,7 @@ def p2(data, is_sample):
                 first_digit = int(char)
                 break
             partial_word += char
-            first_digit = re.search("|".join(numberwords), partial_word)
+            first_digit = re_numberword.search(partial_word)
             if first_digit:
                 first_digit = numberwords.index(first_digit.group(0))
                 break
@@ -46,7 +47,7 @@ def p2(data, is_sample):
                 last_digit = int(char)
                 break
             partial_word = char + partial_word
-            last_digit = re.search("|".join(numberwords), partial_word)
+            last_digit = re_numberword.search(partial_word)
             if last_digit:
                 last_digit = numberwords.index(last_digit.group(0))
                 break

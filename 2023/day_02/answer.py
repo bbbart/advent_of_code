@@ -17,11 +17,11 @@ def p1(data, is_sample):
         grabs = line.split(":")[1].split(";")
         try:
             for grab in grabs:
-                for colour, amount in cube_totals.items():
+                for colour, max_amount in cube_totals.items():
                     num_revealed = re.search(rf"(\d+) {colour}", grab)
                     if not num_revealed:
                         continue
-                    if int(num_revealed.group(1)) > amount:
+                    if int(num_revealed.group(1)) > max_amount:
                         raise ImpossibleGame
         except ImpossibleGame:
             continue
