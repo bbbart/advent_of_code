@@ -1,5 +1,8 @@
 #!/usr/bin/sh
 
+# create directory structure with template code for a new
+# day of AoC
+
 year=${2:-$(date +%Y)}
 
 if [ ! -d ${year} ]
@@ -20,10 +23,15 @@ cat <<EOP > ${year}/day_${new_day_num}/answer.py
 #!/usr/bin/env python
 
 def p1(data, is_sample):
-    pass
+    if not is_sample:
+        return 'N/A'
+    return 'N/A'
+
 
 def p2(data, is_sample):
-    pass
+    if not is_sample:
+        return 'N/A'
+    return 'N/A'
 EOP
 
 echo "Added template answer to ${year}/day_${new_day_num}"
