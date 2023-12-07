@@ -8,7 +8,7 @@ class UnknownHandType(Exception):
     pass
 
 
-@dataclass(unsafe_hash=True)
+@dataclass(frozen=True)
 class Hand:
     cardstring: str
     card_order: str = "23456789TJQKA"
@@ -57,7 +57,7 @@ class Hand:
         return True
 
 
-@dataclass(unsafe_hash=True)
+@dataclass(frozen=True)
 class Hand2(Hand):
     card_order: str = "J23456789TQKA"
 
