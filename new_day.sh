@@ -12,8 +12,8 @@ fi
 
 last_day=$(ls ${year} | tail -n 1)
 last_day=${last_day:-day_00}
-
-new_day_num=$((${last_day: -2}+1))
+last_day_num=$((10#${last_day: -2}))
+new_day_num=$((${last_day_num}+1))
 new_day_num=${1:-${new_day_num}}
 printf -v new_day_num "%02d" ${new_day_num}
 

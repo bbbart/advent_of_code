@@ -57,4 +57,12 @@ def p2(data, is_sample):
                     loc = desert_map[loc][1]
             step_counters[start_loc] += 1
 
+    # to be honest, I don't understand this 100%. I know about the lcm-theorem,
+    # but shouldn't the cycle lengths be verified to actually cycle here? I'm
+    # not taking the period of `instructions` into account, nor am I verifying
+    # wheter reaching a 'Z' from an 'A' actually results in having found a
+    # cycle. In fact, I know that continuing for one step more after reaching a
+    # 'Z', one does *not* always return to its corresponding starting 'A'...
+    #
+    # anyway, it yields the correct result :-)
     return math.lcm(*step_counters.values())
