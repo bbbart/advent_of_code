@@ -111,8 +111,8 @@ def p2(data, is_sample):
     }:
         start_char = "F"
 
-    # starting figuring our how many tiles are inside
-    # implements a simple line sweep algorithm
+    # start figuring our how many tiles are inside; this implements a simple
+    # line sweep algorithm
     in_counter = 0
     for y, line in enumerate(data):
         inout = False
@@ -143,7 +143,8 @@ def p2(data, is_sample):
                     horizontal_wall.startswith("L")
                     and horizontal_wall.endswith("7")
                 ):
-                    # 'winding' horizontal_wall, not 'looping' horizontal_wall
+                    # a 'winding' horizontal_wall, not a 'looping'
+                    # horizontal_wall
                     inout = not inout
                 horizontal_wall = ""
 
