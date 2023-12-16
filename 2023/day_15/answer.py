@@ -2,20 +2,15 @@
 
 import re
 from collections import defaultdict, namedtuple
-from functools import cache
+from functools import cache, reduce
 
-re_step = re.compile(r"^(?P<label>.*)(?P<operation>[-=])(?P<focallength>\d*)")
+re_step = re.compile(r"^(?P<label>.+)(?P<operation>[-=])(?P<focallength>\d*)")
 lens = namedtuple("lens", ("label", "focallength"))
 
 
 @cache
 def hasha(ss: str) -> int:
-    value = 0
-    for c in ss:
-        value += ord(c)
-        value *= 17
-        value %= 256
-    return value
+    return reduce(lambda total, c: (total + ord(c)) * 17 % 256, ss, 0)
 
 
 def p1(data, is_sample):
@@ -41,7 +36,7 @@ def p2(data, is_sample):
                     break
             else:
                 lenses[box_num].append(new_lens)
-        elif instructions["operation"] == "-":
+        else:  # instructions["operation"] == "-":
             for l in lenses[box_num][:]:
                 if l.label == instructions["label"]:
                     lenses[box_num].remove(l)
