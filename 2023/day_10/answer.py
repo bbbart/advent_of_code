@@ -111,7 +111,7 @@ def p2(data, is_sample):
     }:
         start_char = "F"
 
-    # start figuring our how many tiles are inside; this implements a simple
+    # start figuring out how many tiles are inside; this implements a simple
     # line sweep algorithm
     in_counter = 0
     for y, line in enumerate(data):
