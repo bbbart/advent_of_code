@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-from dataclasses import dataclass
-from queue import Empty, PriorityQueue
 from collections import defaultdict
+from dataclasses import dataclass
 from itertools import filterfalse
+from queue import Empty, PriorityQueue
 
 
 def show_trench(walls):
@@ -118,6 +118,7 @@ class Rectangle:
 
 
 def p2(data, is_sample):
+    return 'incomplete'
     # the algorithm below actually works, if you consider the lines surrounding
     # the shape no width themselves. so, for a mathematical shape (with the
     # same constraints), it calculates the area, given the coordinates of the
@@ -126,8 +127,9 @@ def p2(data, is_sample):
     # however, in the AoC problem, this is not the case. I expect this can be
     # made to work with a 'alternative' coordinate system, for the lines
     # between the dug trenches (#), instead of the trenches themselves
-    return 'incomplete'
-
+    #
+    # update 19th December 2023: tried to cater for this by introducing
+    # `cornerco`s, but... to no avail :-()
     instructions = []
     for line in data:
         if not line:
@@ -146,21 +148,48 @@ def p2(data, is_sample):
             instructions[i - 1][0] == "L" and instruction[0] == "D"
         ):
             shape = "F"
+            if instructions[0] == "R":
+                # convex corner
+                cornerco = (x - 1, y - 1)
+            else:
+                # concave corner
+                cornerco = (x + 1, y + 1)
+            shapes[cornerco] = shape
         elif (instructions[i - 1][0] == "U" and instruction[0] == "L") or (
             instructions[i - 1][0] == "R" and instruction[0] == "D"
         ):
             shape = "7"
+            if instructions[0] == "D":
+                # convex corner
+                cornerco = (x + 1, y - 1)
+            else:
+                # concave corner
+                cornerco = (x - 1, y + 1)
+            shapes[cornerco] = shape
         elif (instructions[i - 1][0] == "D" and instruction[0] == "R") or (
             instructions[i - 1][0] == "L" and instruction[0] == "U"
         ):
             shape = "L"
+            if instructions[0] == "U":
+                # convex corner
+                cornerco = (x - 1, y + 1)
+            else:
+                # concave corner
+                cornerco = (x + 1, y - 1)
+            shapes[cornerco] = shape
         elif (instructions[i - 1][0] == "D" and instruction[0] == "L") or (
             instructions[i - 1][0] == "R" and instruction[0] == "U"
         ):
             shape = "J"
+            if instructions[0] == "L":
+                # convex corner
+                cornerco = (x + 1, y + 1)
+            else:
+                # concave corner
+                cornerco = (x - 1, y - 1)
+            shapes[cornerco] = shape
 
-        corners.put((x, y))
-        shapes[(x, y)] = shape
+        corners.put(cornerco)
 
         if instruction[0] in ("R", "L"):
             x += (-1 if instruction[0] == "L" else 1) * instruction[1]
@@ -192,7 +221,7 @@ def p2(data, is_sample):
                         corners.put(r.trc)
                 break
             if co_x in (r.tlc[0], r.brc[0]):
-                if not shapes[(co_x, co_y)] in ('J', 'F'):
+                if not shapes[(co_x, co_y)] in ("J", "F"):
                     r.brc = (r.brc[0], co_y)
                     if r.closed:
                         if r.brc not in corners_seen:
