@@ -11,7 +11,6 @@ Signal = namedtuple("Signal", ("hilo", "source", "sink"))
 @dataclass
 class Module:
     type_: chr
-    state: bool
     destinations: list["Module"]
 
     def process_signal(self, signal: Signal) -> bool | None:
@@ -20,6 +19,8 @@ class Module:
 
 # pylint: disable=too-few-public-methods
 class FlipFlop(Module):
+    state: bool = False
+
     def process_signal(self, signal: Signal) -> bool | None:
         if signal.hilo:
             return None
@@ -44,16 +45,16 @@ def parse_input(data):
         if label.startswith("%"):
             module_type = "f"  # flip-flop
             name = label[1:]
-            module = FlipFlop(module_type, False, destinations.split(", "))
+            module = FlipFlop(module_type, destinations.split(", "))
         elif label.startswith("&"):
             module_type = "c"  # conjunction
             name = label[1:]
-            module = Conjunction(module_type, False, destinations.split(", "))
+            module = Conjunction(module_type, destinations.split(", "))
             module.pulse_memory = {}
         else:
             module_type = "b"  # broadcaster
             name = label
-            module = Module(module_type, False, destinations.split(", "))
+            module = Module(module_type, destinations.split(", "))
 
         modules[name] = module
 
@@ -104,12 +105,12 @@ def p2(data, is_sample):
 
     modules = parse_input(data)
 
-    # we look at `xn`, since that is the only module outputting to `rx`
-    # it's a conjunction module, so we need to know when all of it's pulse
+    # we look at `xn`, since that is the only module outputting to `rx`.
+    # this is a conjunction module, so we need to know when all of it's pulse
     # memory entries are True
     #
     # since this is necessarily cyclical, we just register when each of them
-    # switches to True
+    # switches to True individually and calculate the lcm of those counts
     xn_mem = {source: 0 for source in modules["xn"].pulse_memory.keys()}
 
     button_presses = 0
