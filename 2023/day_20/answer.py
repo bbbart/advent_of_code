@@ -10,7 +10,6 @@ Signal = namedtuple("Signal", ("hilo", "source", "sink"))
 
 @dataclass
 class Module:
-    type_: chr
     destinations: list["Module"]
 
     def process_signal(self, signal: Signal) -> bool | None:
@@ -43,18 +42,15 @@ def parse_input(data):
     for line in data:
         label, destinations = line.split(" -> ")
         if label.startswith("%"):
-            module_type = "f"  # flip-flop
             name = label[1:]
-            module = FlipFlop(module_type, destinations.split(", "))
+            module = FlipFlop(destinations.split(", "))
         elif label.startswith("&"):
-            module_type = "c"  # conjunction
             name = label[1:]
-            module = Conjunction(module_type, destinations.split(", "))
+            module = Conjunction(destinations.split(", "))
             module.pulse_memory = {}
         else:
-            module_type = "b"  # broadcaster
             name = label
-            module = Module(module_type, destinations.split(", "))
+            module = Module(destinations.split(", "))
 
         modules[name] = module
 
