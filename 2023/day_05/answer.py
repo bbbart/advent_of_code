@@ -99,7 +99,7 @@ def p2(data, is_sample):
         src = maps[src].src
 
     # calculate the lowest location number
-    # works, but takes a couple of hours... :-)
+    # this works, but takes a couple of hours... :-)
     # very limited memory use however!
     return min(
         reduce(lambda v, m: m.map(v), reversed(map_route), seed)
