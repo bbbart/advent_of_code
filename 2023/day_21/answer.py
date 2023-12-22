@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from collections import deque
+from collections import defaultdict
 from functools import cache
 
 
@@ -38,9 +38,8 @@ def p1(data, is_sample):
 
 
 def p2(data, is_sample):
-    if not is_sample:
-        return "N/A"
-
+    # this works, in theory, but is too slow and takes up too much memory
+    # so, in other words: it doesn't work :-)
     garden_plots = set()
     starting_pos = None
     x, y = 0, 0
@@ -55,9 +54,30 @@ def p2(data, is_sample):
     map_width = x + 1
     map_height = y + 1
 
+    def show_field(locations):
+        fieldcos = set().union(*locations.values())
+        for field_y in range(
+            min(fc[1] for fc in fieldcos), max(fc[1] for fc in fieldcos) + 1
+        ):
+            for y in range(map_height):
+                for field_x in range(
+                    min(fc[0] for fc in fieldcos),
+                    max(fc[1] for fc in fieldcos) + 1,
+                ):
+                    for x in range(map_width):
+                        if (field_x, field_y) in locations[(x, y)]:
+                            char = "O"
+                        elif (x, y) in garden_plots:
+                            char = "."
+                        else:
+                            char = "#"
+                        print(char, end="")
+                print()
+        print()
+
     @cache
-    def get_directions(loc: tuple[int, int]) -> set[tuple[int, int]]:
-        """All directions accessible from the given locations."""
+    def get_open_directions(loc: tuple[int, int]) -> set[tuple[int, int]]:
+        """All directions accessible from the given destinations."""
         return {
             (dx, dy)
             for dx, dy in (
@@ -70,48 +90,46 @@ def p2(data, is_sample):
             in garden_plots
         }
 
-    def bfs_reachable_positions(start, steps):
-        # after entering a new `repetition` of the map, after a certain number
-        # of steps, that portion enters into an endless cycle of reachable
-        # fields, with a period of two. This means that we should be able to
-        # simply count the number of map repetitions we have reached and
-        # consider them as a single unit, flip-flopping between two values.
+    @cache
+    def neighbours(current_position):
+        nbs = set()
+        for direction in get_open_directions(current_position):
+            localco = (
+                current_position[0] + direction[0],
+                current_position[1] + direction[1],
+            )
+            fieldco_delta = (0, 0)
+            if localco[0] < 0:
+                fieldco_delta = (-1, 0)
+                localco = localco[0] % map_width, localco[1]
+            elif localco[0] >= map_width:
+                fieldco_delta = (1, 0)
+                localco = localco[0] % map_width, localco[1]
+            elif localco[1] < 0:
+                fieldco_delta = (0, -1)
+                localco = localco[0], localco[1] % map_height
+            elif localco[1] >= map_height:
+                fieldco_delta = (0, 1)
+                localco = localco[0], localco[1] % map_height
 
-        visited = set()
-        queue = deque([(start, steps)])
+            if localco in garden_plots:
+                nbs.add((localco, fieldco_delta))
 
-        while queue:
-            current_position, steps_remaining = queue.popleft()
-            if (current_position, steps_remaining % 2) in visited:
+        return nbs
+
+    total_steps = 26501365
+    destinations = {0: defaultdict(set), 1: defaultdict(set)}
+    destinations[0][starting_pos].add((0, 0))
+    for step in range(1, total_steps + 1):
+        for loc, fields in destinations[(step - 1) % 2].items():
+            if not destinations[(step - 1) % 2][loc]:
                 continue
+            for newlocal, fielddelta in neighbours(loc):
+                destinations[step % 2][newlocal] |= {
+                    (field[0] + fielddelta[0], field[1] + fielddelta[1])
+                    for field in fields
+                }
 
-            visited.add((current_position, steps_remaining % 2))
-
-            if steps_remaining == 0:
-                continue
-
-            for directions in get_directions(
-                (
-                    current_position[0] % map_width,
-                    current_position[1] % map_height,
-                )
-            ):
-                queue.append(
-                    (
-                        (
-                            current_position[0] + directions[0],
-                            current_position[1] + directions[1],
-                        ),
-                        steps_remaining - 1,
-                    )
-                )
-
-        unique_positions = set(
-            pos for pos, remaining in visited if remaining == 0
-        )
-        return unique_positions
-
-    total_steps = 2000  # 26501365  # 26501365 = 481843 * 11 * 5
-
-    reachable_positions = bfs_reachable_positions(starting_pos, total_steps)
-    return len(reachable_positions)
+    return sum(
+        len(fields) for loc, fields in destinations[total_steps % 2].items()
+    )
