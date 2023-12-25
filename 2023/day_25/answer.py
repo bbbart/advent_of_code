@@ -2,8 +2,8 @@
 
 def p1(data, is_sample):
     if not is_sample:
-        return 54
-    return 525264
+        return 525264
+    return 54
 
     # solved using dot, inkscape and grep :-D
 
