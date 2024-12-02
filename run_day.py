@@ -12,7 +12,7 @@ from pathlib import Path
 try:
     DAY = sys.argv[1].zfill(2)
 except IndexError:
-    sys.exit("Which day?")
+    sys.exit("Which day? Specify DD YYYY, or just DD for the current year.")
 
 try:
     YEAR = sys.argv[2]

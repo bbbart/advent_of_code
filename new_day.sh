@@ -22,13 +22,13 @@ mkdir ${year}/day_${new_day_num}
 cat <<EOP > ${year}/day_${new_day_num}/answer.py
 #!/usr/bin/env python
 
-def p1(data, is_sample):
+def p1(data: list[str], is_sample: bool):
     if not is_sample:
         return 'N/A'
     return 'N/A'
 
 
-def p2(data, is_sample):
+def p2(data: list[str], is_sample: bool):
     if not is_sample:
         return 'N/A'
     return 'N/A'
