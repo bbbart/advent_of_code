@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from collections import defaultdict, namedtuple
+from collections import defaultdict, namedtuple, Counter
 
 coordinate = namedtuple("cooordinate", "x y")
 
@@ -62,12 +62,12 @@ def p2(data: list[str], is_sample: bool):
         if set(a_loc) & set((0, width - 1, height - 1)):
             # 'A' cannot be on the border of the grid
             continue
-        if set("AX") & {
+        if Counter([
             data[a_loc.y + delta_y][a_loc.x + delta_x]
             for delta_x in (-1, 1)
             for delta_y in (-1, 1)
-        }:
-            # corners cannot have 'A' or 'X'
+            ]) != {'M': 2, 'S': 2}:
+            # corners should contain exactly two 'M' and two 'S
             continue
         if (
             data[a_loc.y - 1][a_loc.x - 1] == data[a_loc.y + 1][a_loc.x + 1]
@@ -75,6 +75,7 @@ def p2(data: list[str], is_sample: bool):
         ):
             # opposite corners cannot be the same
             continue
+        print(a_loc)
         word_count += 1
 
     return word_count
