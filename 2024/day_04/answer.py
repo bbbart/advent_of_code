@@ -67,7 +67,7 @@ def p2(data: list[str], is_sample: bool):
             for delta_x in (-1, 1)
             for delta_y in (-1, 1)
             ]) != {'M': 2, 'S': 2}:
-            # corners should contain exactly two 'M' and two 'S
+            # corners should contain exactly two times 'M' and two times 'S'
             continue
         if (
             data[a_loc.y - 1][a_loc.x - 1] == data[a_loc.y + 1][a_loc.x + 1]
@@ -75,7 +75,6 @@ def p2(data: list[str], is_sample: bool):
         ):
             # opposite corners cannot be the same
             continue
-        print(a_loc)
         word_count += 1
 
     return word_count
