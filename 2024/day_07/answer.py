@@ -34,7 +34,7 @@ def p1(data: list[str], is_sample: bool):
 
 
 def p2(data: list[str], is_sample: bool):
-    OPERATORS = (add, mul, lambda x, y: int(f"{x}{y}"))
+    OPERATORS = (add, mul, lambda x, y: x * 10**len(str(y)) + y)
 
     calib_total = 0
     for line in data:
