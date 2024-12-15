@@ -41,62 +41,59 @@ def p1(data: list[str], is_sample: bool):
 def p2(data: list[str], is_sample: bool):
     if not is_sample:
         return "N/A"
+    return "N/A"
 
-    # 1/ find shapes as before (shape = set of coordinates)
-    farm: dict[tuple[int], chr] = {}
-    for y, line in enumerate(data):
-        for x, char in enumerate(line):
-            farm[(x, y)] = char
+    # # 1/ find shapes as before (shape = set of coordinates)
+    # farm: dict[tuple[int], chr] = {}
+    # for y, line in enumerate(data):
+    #     for x, char in enumerate(line):
+    #         farm[(x, y)] = char
 
-    seen: set[tuple[int]] = set()
-    fields: list[set[tuple[int]]] = []
+    # seen: set[tuple[int]] = set()
+    # fields: list[set[tuple[int]]] = []
 
-    steps = set(((0, 1), (0, -1), (1, 0), (-1, 0)))
-    price = 0
-    while seen != set(farm.keys()):
-        start = (set(farm.keys()) - seen).pop()
-        crop = farm[start]
+    # steps = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+    # while seen != set(farm.keys()):
+    #     start = (set(farm.keys()) - seen).pop()
+    #     crop = farm[start]
 
-        to_explore: set[tuple[int]] = set()
-        to_explore.add(start)
+    #     to_explore: set[tuple[int]] = set()
+    #     to_explore.add(start)
 
-        field = set()
-        while to_explore:
-            x, y = to_explore.pop()
-            seen.add((x, y))
-            field.add((x, y))
-            for dx, dy in steps:
-                if (x + dx, y + dy) in field:
-                    continue
-                if farm.get((x + dx, y + dy), None) == crop:
-                    to_explore.add((x + dx, y + dy))
-        fields.append(field)
+    #     field = set()
+    #     while to_explore:
+    #         x, y = to_explore.pop()
+    #         seen.add((x, y))
+    #         field.add((x, y))
+    #         for dx, dy in steps:
+    #             if (x + dx, y + dy) in field:
+    #                 continue
+    #             if farm.get((x + dx, y + dy), None) == crop:
+    #                 to_explore.add((x + dx, y + dy))
+    #     fields.append(field)
 
-    # 2/ determine corner positioons (virtual coordinates)
-    steps = tuple(((0, 1), (0, -1), (1, 0), (-1, 0)))
-    for field in fields:
-        corners = 0
-        for co in field:
-            neighbours = [(co[0] + dx, co[1] + dy) in field for dx, dy in steps]
-            match sum(neighbours):
-                case 0:
-                    corners += 4
-                case 1:
-                    corners += 2
-                case 3 | 4:
-                    pass
-                case 2:
-                    if neighbours[0] != neighbours[1]:
-                        corners += 2
-                        corner_cell = co
-                        for neighbour, step in zip(neighbours, steps):
-                            if not neighbour:
-                                continue
-                            corner_cell = (
-                                corner_cell[0] + step[0],
-                                corner_cell[1] + step[1],
-                            )
-                        if corner_cell in field:
-                            corners -= 1
+    # # 2/ traverse the boundary clockwise and count the corners
+    # # the code below doesn't make sense
+    # price = 0
+    # for field in fields:
+    #     boundary = {
+    #         cell
+    #         for cell in field
+    #         if any(
+    #             (cell[0] + step[0], cell[1] + step[1]) not in field
+    #             for step in steps
+    #         )
+    #     }
 
-    # 3/ count sides
+    #     edges = 0
+
+    #     for x, y in boundary:
+    #         for step in steps:
+    #             nx, ny = x + step[0], y + step[1]
+    #             if (nx, ny) not in boundary:
+    #                 edges += 1
+
+    #     print(f"area: {len(field)}, sides: {edges}")
+    #     price += len(field) * edges
+
+    # return price
