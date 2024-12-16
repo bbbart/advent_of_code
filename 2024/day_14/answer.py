@@ -79,7 +79,6 @@ def p2(data: list[str], is_sample: bool):
 
     s = 0
     while True:
-        print(s, end="\r")
         pos_s = {
             ((r[0] + s * r[2]) % width - width // 2, (r[1] + s * r[3]) % height)
             for r in robots
