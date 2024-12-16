@@ -10,7 +10,7 @@ def visualize(robots, w, h, s=0):
         ((r[0] + s * r[2]) % w, (r[1] + s * r[3]) % h) for r in robots
     )
     for y in range(h):
-        print("\n")
+        print("")
         if y == h // 2:
             continue
         for x in range(w):
@@ -63,33 +63,36 @@ def p1(data: list[str], is_sample: bool):
 def p2(data: list[str], is_sample: bool):
     if is_sample:
         return "N/A"
+    return "N/A"
 
-    width = 101
-    height = 103
+    # width = 101
+    # height = 103
 
-    robots = set()
-    for line in data:
-        robot = tuple(
-            map(
-                int,
-                re.match(r"p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)", line).groups(),
-            )
-        )
-        robots.add(robot)
+    # robots = set()
+    # for line in data:
+    #     robot = tuple(
+    #         map(
+    #             int,
+    #             re.match(r"p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)", line).groups(),
+    #         )
+    #     )
+    #     robots.add(robot)
 
-    s = 0
-    while True:
-        pos_s = {
-            ((r[0] + s * r[2]) % width - width // 2, (r[1] + s * r[3]) % height)
-            for r in robots
-        }
-        # we're assuming the christmas tree has horizontal symmetry
-        # hmmm... but the challenge states "MOST of the robots should arrange
-        # themselves"...
-        for p in pos_s:
-            if not (-p[0], p[1]) in pos_s:
-                s+= 1
-                break
-        else:
-            visualize(robots, width, height, s)
-            return s
+    # s = 0
+    # while True:
+    #     pos_s = {
+    #         ((r[0] + s * r[2]) % width - width // 2, (r[1] + s * r[3]) % height)
+    #         for r in robots
+    #     }
+    #     # we're assuming the christmas tree has horizontal symmetry
+    #     # hmmm... but the challenge states "MOST of the robots should arrange
+    #     # themselves"...
+    #     symmetry = sum((-p[0], p[1]) in pos_s for p in pos_s if p[0] >= 0) / (
+    #         len(robots) / 2
+    #     )
+    #     if symmetry < 0.1:
+    #         print(s, symmetry, end="\r")
+    #         s += 1
+    #     else:
+    #         visualize(robots, width, height, s)
+    #         return s
