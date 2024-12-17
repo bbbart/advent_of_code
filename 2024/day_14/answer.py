@@ -84,7 +84,8 @@ def p2(data: list[str], is_sample: bool):
             for r in robots
         }
         # we're assuming that the christmas tree is made out of non-overlapping
-        # robots - assumption taken from 
+        # robots - assumption taken from
+        # https://www.youtube.com/watch?v=U3SoVMGpF-E
         if len(pos_s) == len(robots):
             for y in range(height):
                 for x in range(width):
