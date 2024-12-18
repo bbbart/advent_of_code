@@ -6,7 +6,7 @@ from functools import reduce
 
 def p1(data: list[str], is_sample: bool):
     memory = "".join(data)
-    multiply_instruction = re.compile(r"mul\((?P<fac1>\d+),(?P<fac2>\d+)\)")
+    multiply_instruction = re.compile(r"mul\((\d+),(\d+)\)")
 
     total = 0
     for instruction in multiply_instruction.finditer(memory):
@@ -21,7 +21,7 @@ def p2(data: list[str], is_sample: bool):
     for mem in memory_corrupt:
         memory += mem.split("don't()")[0]
 
-    multiply_instruction = re.compile(r"mul\((?P<fac1>\d+),(?P<fac2>\d+)\)")
+    multiply_instruction = re.compile(r"mul\((\d+),(\d+)\)")
 
     total = 0
     for instruction in multiply_instruction.finditer(memory):

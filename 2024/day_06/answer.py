@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import re
-from collections import defaultdict
 
 DELTAS = {">": (1, 0), "v": (0, 1), "<": (-1, 0), "^": (0, -1)}
 DIRS = list(DELTAS)

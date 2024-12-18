@@ -18,7 +18,7 @@ def p1(data: list[str], is_sample: bool):
 def p2(data: list[str], is_sample: bool):
     left, right = [], []
     for line in data:
-        l, r = map(int, line.split("   "))
+        l, r = map(int, line.split())
         left.append(l)
         right.append(r)
 

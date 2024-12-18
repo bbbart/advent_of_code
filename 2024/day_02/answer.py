@@ -6,7 +6,7 @@ from itertools import pairwise
 def parse_input(data: list[str]) -> list[list[int]]:
     reports = []
     for levels in data:
-        reports.append(tuple(map(int, levels.split(" "))))
+        reports.append(tuple(map(int, levels.split())))
     return reports
 
 
