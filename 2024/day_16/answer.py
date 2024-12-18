@@ -1,53 +1,90 @@
 #!/usr/bin/env python
 
-# pylint: disable=too-many-locals
+from collections import defaultdict
+from itertools import product
+
+
+# pylint: disable=too-many-branches,too-many-statements,too-many-locals
 def p1(data: list[str], is_sample: bool):
     # parse the input data
-    grid: dict[tuple[int], chr] = {}
-    start_pos = None
-    target_pos = None
-    for y, line in enumerate(data):
-        for x, char in enumerate(line):
-            grid[(x, y)] = char
-            if char == "S":
-                start_pos = (x, y)
-            elif char == "E":
-                target_pos = (x, y)
+    for x, line in enumerate(data):
+        try:
+            source = (x, line.index("S"))
+        except ValueError:
+            pass
+        try:
+            sink = (x, line.index("E"))
+        except ValueError:
+            pass
 
-    directions = set(((1, 0), (0, 1), (-1, 0), (0, -1)))
+    width = len(data[0])
 
-    # modified dijkstra
-    # this is slooooooooooooooooooowwww
-    # but it works :-)
-    to_explore = {
-        ((x, y), orientation)
-        for (x, y), char in grid.items()
-        if char != "#"
-        for orientation in directions
-    }
-    distances = {pos: float("inf") for pos in to_explore}
-
-    begin = (start_pos, (1, 0))
-    distances[begin] = 0
-
-    while to_explore:
-        pos = min(to_explore, key=distances.__getitem__)
-        to_explore.remove(pos)
-        for dx, dy in directions:
-            if (pos[1][0] + dx, pos[1][1] + dy) == (0, 0):
-                # we don't reverse
+    # store the maze as a graph of corners
+    # find horizontal edges
+    graph = defaultdict(list)
+    for x, line in enumerate(data):
+        corner_left, corner_right = None, None
+        for y, char in enumerate(line):
+            if char == "#":
+                corner_left, corner_right = None, None
                 continue
-            new_pos = ((pos[0][0] + dx, pos[0][1] + dy), (dx, dy))
-            points = 1 if (dx, dy) == pos[1] else 1001
-            new_distance = distances[pos] + points
-            if new_pos in to_explore:
-                distances[new_pos] = min(new_distance, distances[new_pos])
+            if data[x - 1][y] == "." or data[x + 1][y] == ".":
+                if not corner_left:
+                    corner_left = (x, y)
+                else:
+                    corner_right = (x, y)
+                    graph[corner_left].append(corner_right)
+                    graph[corner_right].append(corner_left)
+                    corner_left, corner_right = corner_right, None
 
-    return min(
-        distance for pos, distance in distances.items() if pos[0] == target_pos
-    )
+    # find vertical edges
+    for y in range(width):
+        corner_top, corner_bottom = None, None
+        for x, line in enumerate(data):
+            if line[y] == "#":
+                corner_top, corner_bottom = None, None
+                continue
+            if line[y - 1] == "." or line[y + 1] == "." or line[y] in "SE":
+                if not corner_top:
+                    corner_top = (x, y)
+                else:
+                    corner_bottom = (x, y)
+                    graph[corner_top].append(corner_bottom)
+                    graph[corner_bottom].append(corner_top)
+                    corner_top, corner_bottom = corner_bottom, None
 
+    # find the shortest path
+    def neighbours(pos):
+        for n in graph[pos[0]]:
+            x_dist = n[0] - pos[0][0]
+            y_dist = n[1] - pos[0][1]
+            direction = (
+                (x_dist // abs(x_dist)) if x_dist else 0,
+                (y_dist // abs(y_dist)) if y_dist else 0,
+            )
+            if direction == pos[1]:
+                yield abs(x_dist) + abs(y_dist), (n, direction)
+            elif direction[0] + direction[0] + direction[1] + direction[1] == 0:
+                continue
+            else:
+                yield 1000 + abs(x_dist) + abs(y_dist), (n, direction)
+
+    to_explore = set(product(graph.keys(), [(0, 1), (-1, 0), (0, -1), (1, 0)]))
+    distance = defaultdict(lambda: float("inf"))
+    prev = {}
+
+    distance[source, (0, 1)] = 0
+    while to_explore:
+        pos = min(to_explore, key=distance.__getitem__)
+        to_explore.remove(pos)
+
+        for cost, new_pos in neighbours(pos):
+            if distance[new_pos] > distance[pos] + cost:
+                distance[new_pos] = distance[pos] + cost
+                prev[new_pos] = pos
+
+    return min(distance[p] for p in distance if p[0] == sink)
 
 def p2(data: list[str], is_sample: bool):
     # tried brute forcing, but that took way too long
-    return 'N/A'
+    return "N/A"
