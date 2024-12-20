@@ -29,17 +29,18 @@ def p2(data: list[str], is_sample: bool):
     patterns = set(data[2:])
 
     total = 0
-    # dynamic programming
     for pattern in patterns:
+        # we're not generating the arrangements here, just counting how many
+        # there are
         n = len(pattern)
-        dp = defaultdict(int)
-        dp[0] = 1
+        arrangements = defaultdict(int)
+        arrangements[0] = 1
 
         for i in range(1, n + 1):
             for j in range(i):
                 if pattern[j:i] in towels:
-                    dp[i] += dp[j]
+                    arrangements[i] += arrangements[j]
 
-        total += dp[n]
+        total += arrangements[n]
 
     return total
