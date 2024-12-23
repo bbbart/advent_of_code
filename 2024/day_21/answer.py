@@ -2,6 +2,7 @@
 
 from collections import deque
 from itertools import pairwise
+from datetime import datetime
 
 NUMERIC_KEYPAD = {
     "A": [("3", "^"), ("0", "<")],
@@ -130,12 +131,13 @@ def p2(data: list[str], is_sample: bool):
             procedure += bfs(source, sink, NUMERIC_KEYPAD)
         procedures[code] = procedure
 
-    for _ in range(25):
+    for i in range(25):
         for code, procedure in procedures.items():
             new_procedure = ""
             for source, sink in pairwise("A" + procedure):
                 new_procedure += bfs(source, sink, DIRECTIONAL_KEYPAD)
             procedures[code] = new_procedure
+        print(i, datetime.now(), len(procedures[codes[0]]))
 
     total = 0
     for code, procedure in procedures.items():
