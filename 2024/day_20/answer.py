@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-import sys
-from collections import defaultdict
+from collections import Counter, defaultdict, deque
 from itertools import combinations
-
-sys.setrecursionlimit(30_000)
 
 
 # pylint: disable=too-many-locals
@@ -108,8 +105,10 @@ def p1(data: list[str], is_sample: bool):
 
 # pylint: disable=too-many-locals
 def p2(data: list[str], is_sample: bool):
-    # if not is_sample:
-    #     return "N/A"
+    if is_sample:
+        cutoff = 50
+    else:
+        cutoff = 100
 
     # parsing the data
     start_pos, end_pos = None, None
@@ -130,7 +129,7 @@ def p2(data: list[str], is_sample: bool):
                 case ".":
                     fair_time += 1
 
-    def shortest_path(start_pos, cheat_pos=None):
+    def shortest_path():
         time = defaultdict(lambda: float("inf"))
         prev = {}
         queue = {
@@ -155,9 +154,6 @@ def p2(data: list[str], is_sample: bool):
                 if (nx, ny) == end_pos:
                     queue.clear()
                     break
-            if (x, y) == cheat_pos:
-                queue.clear()
-                break
 
         path = []
         prev_pos = (x, y)
@@ -165,65 +161,108 @@ def p2(data: list[str], is_sample: bool):
         while (prev_pos := prev.get(prev_pos)) != start_pos:
             path.append(prev_pos)
 
-        return path
+        return [start_pos] + list(reversed(path)) + [end_pos]
 
-    fair_path = shortest_path(start_pos)
-    fair_path.insert(0, end_pos)
-    fair_path.append(start_pos)
+    fair_path = shortest_path()
 
-    def dfs(current, target, max_length, path_length=0, visited=None):
-        if visited is None:
-            visited = set()
+    def find_cheat(start, target, max_length):
+        dist = defaultdict(lambda: float("inf"))
+        prev = {}
+        to_visit = walls.copy()
+        to_visit.add(start)
+        to_visit.add(target)
 
-        if path_length > max_length:
-            return False
-
-        if current == target:
-            return path_length
-
-        visited.add(current)
-
-        for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
-            neighbour_pos = current[0] + dx, current[1] + dy
-            if not (
-                0 < neighbour_pos[0] < height - 1
-                and 0 < neighbour_pos[1] < width - 1
-            ):
-                continue
-            neighbour = data[neighbour_pos[0]][neighbour_pos[1]]
-            if neighbour not in "#E" or neighbour_pos in visited:
-                continue
-            if path_length := dfs(
-                neighbour_pos, target, max_length, path_length + 1, visited
-            ):
-                return path_length
-
-        visited.remove(current)
-
-        return False
+        dist[start] = 0
+        while to_visit:
+            x, y = min(to_visit, key=dist.__getitem__)
+            to_visit.remove((x, y))
+            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                nx, ny = x + dx, y + dy
+                if (nx, ny) not in to_visit:
+                    continue
+                if dist[(nx, ny)] < dist[(x, y)] + 1:
+                    continue
+                dist[(nx, ny)] = dist[(x, y)] + 1
+                if dist[(nx, ny)] > max_length:
+                    continue
+                prev[(nx, ny)] = (x, y)
+                if (nx, ny) == target:
+                    return dist[(nx, ny)]
 
     # stategy: for each cell on the fair path, figure out if there is another
     # cell we can reach only by passing to max 19 walls that is more than 100
     # (plus the length of the cheat) closer to the end on the fair path, so:
     # A -> B -> ...cheat... -> Y -> -> Z is a good cheat if B and Y are more
     # than 100 + len(cheat) steps apart and len(cheat) < 20
-    for pos in fair_path:
-        possible_cheats = {
-            (pos[0] + i, pos[1] + j)
-            for i in range(-19, 20)
-            for j in range(-19, 20)
-            if abs(i) + abs(j) < 20
-            and 0 < pos[0] + i < height
-            and 0 < pos[1] + j < width
-        }
-        possible_cheats -= walls
 
-        good_cheats = 0
-        for cheatpos in possible_cheats:
-            print("trying ")
-            cheat_path_len = dfs(pos, cheatpos, 19)
-            # TODO: dfs is bad here, we want the shortest possible cheat route
-            # between pos and cheatpos, so bfs would be better here?
-            if not cheat_path_len:
+    # for cheat_start in fair_path:
+    #     possible_cheats = {
+    #         (cheat_start[0] + i, cheat_start[1] + j)
+    #         for i in range(-20, 21)
+    #         for j in range(-20, 21)
+    #         if abs(i) + abs(j) <= 20
+    #         and 0 < cheat_start[0] + i < height
+    #         and 0 < cheat_start[1] + j < width
+    #         and (cheat_start[0] + i, cheat_start[1] + j) not in walls
+    #         and fair_path.index(cheat_start)
+    #         - fair_path.index((cheat_start[0] + i, cheat_start[1] + j))
+    #         > 1
+    #     }
+
+    #     good_cheats = 0
+    #     for cheat_end in possible_cheats:
+    #         max_gain = fair_path.index(cheat_start) - fair_path.index(cheat_end) + 1
+    #         if max_gain < cutoff:
+    #             continue
+    #         print(f"trying {cheat_start} - {cheat_end}", end="\r")
+    #         cheat_path_len = find_cheat(cheat_start, cheat_end, max_gain)
+    #         if not cheat_path_len:
+    #             continue
+    #         print(cheat_start, cheat_end, cheat_path_len)
+    #         good_cheats += 1
+
+    def shortest_cheat(start, end, maxlen):
+        queue = deque([(start, 0)])
+        visited = set()
+        while queue:
+            pos, dist = queue.popleft()
+            if dist > maxlen:
                 continue
-            print(pos, cheatpos, cheat_path_len)
+            if pos == end:
+                return dist
+            visited.add(pos)
+            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                nx, ny = pos[0] + dx, pos[1] + dy
+                # if nx == 0 or ny == 0 or nx == height or ny == width:
+                #     continue
+                if (nx, ny) not in walls and (nx, ny) != end:
+                    continue
+                if (nx, ny) not in visited and (
+                    (nx, ny),
+                    dist + 1,
+                ) not in queue:
+                    queue.append(((nx, ny), dist + 1))
+
+        return False
+
+    gains = []
+    for i in range(len(fair_path) - 1):
+        for j in range(i + cutoff, len(fair_path)):
+            cheat_start = fair_path[i]
+            cheat_end = fair_path[j]
+            if (
+                abs(cheat_end[0] - cheat_start[0])
+                + abs(cheat_end[1] - cheat_start[1])
+                > 20
+            ):
+                continue
+            cheat_len = shortest_cheat(cheat_start, cheat_end, 20)
+            if not cheat_len:
+                continue
+            fair_len = i + len(fair_path) - 1 - j
+            gain = len(fair_path) - 1 - fair_len - cheat_len
+            if gain >= cutoff:
+                # print(cheat_start, cheat_end, cheat_len, gain)
+                gains.append(gain)
+
+    return len(gains)
