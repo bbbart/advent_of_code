@@ -54,59 +54,52 @@ fn main() {
     answer = count_dfs(&graph, "you".to_string(), "out".to_string(), &mut memo) as i64;
     println!("PART 1: {:?}", answer);
 
-    fn count_correct_dfs(
+    fn count_valid_dfs(
         graph: &HashMap<String, Vec<String>>,
         current: String,
-        end: String,
-        required: (String, String),
-        seen: (bool, bool),
-        memo: &mut HashMap<(String, bool, bool), usize>,
+        end: &str,
+        mut valid_path: (bool, bool),
+        memo: &mut HashMap<(String, (bool, bool)), Option<usize>>,
     ) -> usize {
         if current == end {
-            return if seen.0 && seen.1 { 1 } else { 0 };
+            if valid_path == (true, true) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
 
-        let key = (current.clone(), seen.0, seen.1);
-        if let Some(&count) = memo.get(&key) {
-            return count;
+        if let Some(Some(count)) = memo.get(&(current.clone(), valid_path)) {
+            return *count;
         }
 
-        let count = graph
-            .get(&current)
-            .map(|neighbours| {
-                neighbours
-                    .iter()
-                    .map(|neighbour| {
-                        let new_seen = (
-                            seen.0 || neighbour == &required.0,
-                            seen.1 || neighbour == &required.1,
-                        );
-                        count_correct_dfs(
-                            graph,
-                            neighbour.clone(),
-                            end.clone(),
-                            required.clone(),
-                            new_seen,
-                            memo,
-                        )
-                    })
-                    .sum()
+        if current == "dac" {
+            valid_path.0 = true;
+        }
+        if current == "fft" {
+            valid_path.1 = true;
+        }
+
+        let count = graph[&current]
+            .iter()
+            .map(|neighbour| {
+                count_valid_dfs(graph, neighbour.clone(), end, valid_path, memo)
             })
-            .unwrap_or(0);
+            .sum();
 
-        memo.insert(key, count);
+        memo.insert((current, valid_path), Some(count));
         count
     }
 
-    let mut memo: HashMap<(String, bool, bool), usize> = HashMap::new();
-    let seen = (false, false);
-    answer = count_correct_dfs(
+    let mut memo: HashMap<(String, (bool, bool)), Option<usize>> = HashMap::new();
+    let valid_path = (false, false);
+    answer = count_valid_dfs(
         &graph,
-        "you".to_string(),
-        "out".to_string(),
-        ("dac".to_string(), "fft".to_string()),
-        seen,
+        "svr".to_string(),
+        "out",
+        valid_path,
         &mut memo,
     ) as i64;
+
     println!("PART 2: {:?}", answer);
 }
